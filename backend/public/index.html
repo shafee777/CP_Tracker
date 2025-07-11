@@ -1,0 +1,136 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LeetCode User Lookup</title>
+  <style>
+    body { font-family: Arial; padding: 2rem; }
+    input { padding: 0.5rem; width: 200px; }
+    button { padding: 0.5rem; }
+    pre { background: #f4f4f4; padding: 1rem; margin-top: 1rem; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>🔎 LeetCode User Info</h1>
+  <input type="text" id="username" placeholder="Enter LeetCode username" />
+  <button onclick="fetchData()">Get Info</button>
+
+  <h1>👨‍🍳 CodeChef User Info</h1>
+  <input type="text" id="cc-username" placeholder="Enter CodeChef username" />
+  <button onclick="fetchCC()">Get Info</button>
+
+  <h2>📄 Leetcode Profile</h2>
+  <pre id="profile"></pre>
+
+  <h2>📄 CodeChef Profile</h2>
+  <pre id="cc-profile"></pre>
+
+  <h2>🏁 Contests</h2>
+  <pre id="contests"></pre>
+
+  <!-- <h2>🏁 Attended Contests</h2>
+  <pre id="attended-contests"></pre> -->
+
+
+  <!-- <h2>📝 Recent Submissions</h2>
+  <pre id="submissions"></pre> -->
+
+  <h2>📝 Recent Submissions </h2>
+  <pre id="submissions-with-tags"></pre>
+
+  <!-- <h2>🏷️ Problem Tags</h2>
+  <input type="text" id="problem-slug" placeholder="Enter LeetCode problem slug (e.g., two-sum)" />
+  <button onclick="fetchTags()">Get Tags</button>
+  <pre id="tags"></pre> -->
+
+
+  <h2>⏳ Upcoming LeetCode Contests</h2>
+  <pre id="upcoming-contests"></pre>
+  
+  <h2>⏳ Upcoming CodeChef Contests</h2>
+<pre id="upcoming-codechef-contests"></pre>
+
+<script>
+//Leetcode
+async function fetchData() {
+  const username = document.getElementById('username').value;
+  if (!username) return alert("Please enter a username");
+
+  const show = (id, data) => {
+    document.getElementById(id).textContent = JSON.stringify(data, null, 2);
+  };
+
+  try {
+    const baseURL = 'http://localhost:3000';
+
+    const [profile, contestsRaw,recent_tag, upcoming] = await Promise.all([
+      fetch(`${baseURL}/user/${username}`).then(res => res.json()),
+      fetch(`${baseURL}/user/${username}/contests`).then(res => res.json()),
+      fetch(`${baseURL}/user/${username}/submissions-with-tags`).then(res => res.json()),
+      fetch(`${baseURL}/contests/upcoming`).then(res => res.json())
+    ]);
+
+    const contestHistory = contestsRaw.ratingHistory || []; 
+    show("profile", profile);
+    show("contests", contestsRaw); 
+    show("submissions-with-tags",recent_tag);
+    show("upcoming-contests", upcoming);
+
+  } catch (err) {
+    alert("Failed to fetch data. Check username or try again.");
+    console.error(err);
+  }
+}
+//fetchtags
+ async function fetchTags() {
+    const slug = document.getElementById('problem-slug').value.trim();
+    if (!slug) return alert("Please enter a problem slug");
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/problem-tags/${slug}`);
+      const data = await res.json();
+
+      const tagsDiv = document.getElementById('tags');
+      if (data.tags?.length) {
+      tagsDiv.textContent = `Tags for "${slug}":\n\n` + data.tags.join('\n');
+    } else {
+      tagsDiv.textContent = `No tags found for "${slug}".`;
+    }
+  } catch (err) {
+    alert("Failed to fetch problem tags.");
+    console.error(err);
+  }
+  }
+
+
+//Codechef
+async function fetchCC() {
+  const username = document.getElementById('cc-username').value;
+  if (!username) return alert("Please enter CodeChef username");
+
+  try {
+    const profileData = await fetch(`/codechef/${username}`).then(res => res.json());
+    document.getElementById('cc-profile').textContent = JSON.stringify(profileData, null, 2);
+
+    const upcoming = await fetch(`/codechef/upcoming/contests`).then(res => res.json());
+
+    const contestHTML = upcoming.map(c =>
+      `🏆 ${c.contestName} [${c.contestCode}]
+📅 Starts: ${c.startDate}
+📅 Ends:   ${c.endDate}`
+    ).join('\n\n');
+
+    document.getElementById('upcoming-codechef-contests').textContent = contestHTML;
+
+  } catch (err) {
+    alert("Error fetching CodeChef data");
+    console.error(err);
+  }
+}
+
+
+  </script>
+</body>
+</html>
