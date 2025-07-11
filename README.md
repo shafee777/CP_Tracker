@@ -53,17 +53,17 @@ Make sure You have MongoDb Atlas App
 ### 4. Start the project
    
 **Backend**:
-cd backend
-Node index.js
+1.cd backend
+2.Node index.js
 
 **Frontend**:
-cd frontend
-npm run dev
+1.cd frontend
+2.npm run dev
 
-🧠 ML Recommendation System
+### 🧠 ML Recommendation System
 The ML engine fetches the user's solved problems, extracts tags, and matches them against a database of unsolved problems using cosine similarity (TF-IDF). The backend invokes Python via child_process.spawn() to return the top 10 recommendations.
 
-📚 API Endpoints
+### 📚 API Endpoints
 Endpoint	Description
 /all/:platform/:username	Fetch user data from LeetCode, Codeforces, or CodeChef
 /all/combined/:username	Unified profile from all platforms
@@ -72,13 +72,13 @@ Endpoint	Description
 /contests/upcoming	Aggregated upcoming contests
 
 
-🤝 Contributing
+### 🤝 Contributing
 Contributions, suggestions, and feedback are welcome! If you'd like to contribute:
 
 git clone https://github.com/your-username/cpai.git
 
-📄 License
+### 📄 License
 MIT License
 
-✍️ Author
+### ✍️ Author
 Mohamed Shafee M
