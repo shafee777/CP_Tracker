@@ -37,26 +37,26 @@
 git clone https://github.com/your-username/cpai.git
 cd cpai
 
-2. Install dependencies
+### 2. Install dependencies
    
-**Frontend**
+**Frontend**:
 cd frontend
 npm install
 
-**Backend**
+**Backend**:
 cd backend
 npm install
 
-3. Setup environment variables
+### 3. Setup environment variables
 Make sure You have MongoDb Atlas App
 
-4. Start the project
+### 4. Start the project
    
-**Backend**
+**Backend**:
 cd backend
 Node index.js
 
-**Frontend**
+**Frontend**:
 cd frontend
 npm run dev
 
