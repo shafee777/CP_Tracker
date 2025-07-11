@@ -1,7 +1,7 @@
 🧠 CPAI - Competitive Programming AI (UCPLP)
 
 **CPAI (Unified Competitive Programming & Learning Platform)** is an all-in-one dashboard that aggregates your profiles from **LeetCode**, **Codeforces**, and **CodeChef**. It provides insightful stats, personalized problem recommendations using ML, visual progress tracking, contest data, and more — all in one place.
-
+> 🔗 Live Repo: [CP_Tracker](https://github.com/shafee777/CP_Tracker)
 ---
 
 ## 🚀 Features
@@ -34,8 +34,8 @@
 
 ### 1. Clone the repository
 
-git clone https://github.com/your-username/cpai.git
-- cd cpai
+git clone https://github.com/shafee777/CP_Tracker.git
+- cd CP_Tracker
 
 ### 2. Install dependencies
    
