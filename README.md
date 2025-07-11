@@ -35,17 +35,17 @@
 ### 1. Clone the repository
 
 git clone https://github.com/your-username/cpai.git
-cd cpai
+- cd cpai
 
 ### 2. Install dependencies
    
 **Frontend**:
-cd frontend
-npm install
+- cd frontend
+- npm install
 
 **Backend**:
-cd backend
-npm install
+- cd backend
+- npm install
 
 ### 3. Setup environment variables
 Make sure You have MongoDb Atlas App
@@ -53,12 +53,12 @@ Make sure You have MongoDb Atlas App
 ### 4. Start the project
    
 **Backend**:
-1.cd backend
-2.Node index.js
+- cd backend
+- node index.js
 
 **Frontend**:
-1.cd frontend
-2.npm run dev
+- cd frontend
+- npm run dev
 
 ### 🧠 ML Recommendation System
 The ML engine fetches the user's solved problems, extracts tags, and matches them against a database of unsolved problems using cosine similarity (TF-IDF). The backend invokes Python via child_process.spawn() to return the top 10 recommendations.
