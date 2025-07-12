@@ -1,9 +1,10 @@
-//index.js
 const express = require('express');
 const cors = require('cors');
-const connectdb=require('./models/connectdb');
+const connectdb = require('./models/connectdb');
+const path = require('path');
 const app = express();
 const PORT = 3000;
+
 const lcPredictionRoute = require('./routes/LC_prediction');
 
 // Middleware
@@ -28,14 +29,18 @@ app.use('/api/users', userRoutes);
 app.use('/user', leetcodeRoutes);
 app.use('/api/lccn', lcPredictionRoute);
 app.use('/api/auth', authRoutes);
-// app.use('/leetcode', leetcodeRoutes);
-// app.use('/api/leetcode', leetcodeRoutes);
 app.use('/contests', contestRoutes);
 app.use('/codechef', codechefRoutes);
 app.use('/api/codeforces', codeforceRoutes);
 app.use('/all', allplatformRoutes);
 app.use('/recommend', recommendRoute);
 
+// ✅ Serve frontend (Vite) build from backend
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});
 
 // Default route
 app.get('/', (req, res) => {
