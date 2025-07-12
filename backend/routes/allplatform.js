@@ -1,4 +1,4 @@
-// File: backend/routes/all.js
+// File: backend/routes/allplatform.js
 
 const express = require('express');
 const router = express.Router();
