@@ -42,22 +42,18 @@ git clone https://github.com/shafee777/CP_Tracker.git
 **Frontend**:
 - cd frontend
 - npm install
+- cd..
 
 **Backend**:
 - cd backend
 - npm install
+- cd..
 
 ### 3. Setup environment variables
 Make sure You have MongoDb Atlas App
 
 ### 4. Start the project
    
-**Backend**:
-- cd backend
-- node index.js
-
-**Frontend**:
-- cd frontend
 - npm run dev
 
 ### 🧠 ML Recommendation System
