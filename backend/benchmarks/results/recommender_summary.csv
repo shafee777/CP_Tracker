@@ -1,0 +1,11 @@
+profile,lc_username,solved_slug_count,solved_api_count,runs,median_ms,p95_ms,min_ms,max_ms,weak_tags,weak_tag_coverage,total_recs,recs_Easy,recs_Medium,recs_Hard,integrity_issues,integrity_detail
+Shafee_77,Shafee_77,0,668,20,5.415,6.633,4.991,6.932,Array|Dynamic Programming|String|Math|Tree,1.0,50,10,29,11,0,OK
+Thorfin_7,Shafee_77,219,611,20,10.247,11.34,8.454,11.502,Graph|Breadth-first Search|Union Find|Design|Greedy,1.0,50,4,34,12,0,OK
+jd,(none),0,0,20,6.391,7.166,5.214,7.654,Array|Dynamic Programming|String|Math|Tree,1.0,50,10,29,11,0,OK
+ahad@gmail.com,(none),0,0,20,6.191,7.998,5.272,8.501,Array|Dynamic Programming|String|Math|Tree,1.0,50,10,29,11,0,OK
+mohit,smohitraj,684,832,20,13.031,18.495,9.54,19.443,Union Find|Trie|Segment Tree|Graph|Queue,1.0,50,2,31,17,0,OK
+shafe,(none),0,0,20,5.769,7.352,4.506,7.609,Array|Dynamic Programming|String|Math|Tree,1.0,50,10,29,11,0,OK
+ajs,Shafee_77,0,0,20,6.003,7.447,4.862,7.453,Array|Dynamic Programming|String|Math|Tree,1.0,50,10,29,11,0,OK
+sh_7,balajiii_,0,0,20,6.708,9.29,4.977,9.704,Array|Dynamic Programming|String|Math|Tree,1.0,50,10,29,11,0,OK
+prem,premsks67,18,1163,20,10.251,13.477,8.977,16.845,Math|Tree|Depth-first Search|Breadth-first Search|Dynamic Programming,1.0,50,6,35,9,0,OK
+sh,Shafee7,186,138,20,12.529,19.014,9.254,22.397,Depth-first Search|Backtracking|Graph|Tree|Union Find,1.0,50,2,38,10,0,OK

@@ -7,7 +7,8 @@ const { graphqlQuery, getProblemTags } = require('../utils/leetcode-scraper');
 const { fetchAcceptedSubmissions } = require('../utils/fetchAcceptedSubmissions');
 const { getUserInfo, getContestHistory} = require('../utils/codeforce-scraper');
 const { getUserData } = require('../utils/codechefScraper');
-const User=require("../models/login")
+const User=require("../models/login");
+const { invalidateUserCache } = require('./recommend');
 
 const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 
@@ -268,7 +269,7 @@ router.post('/combined', async (req, res) => {
     );
 
     const existingUser = userId
-      ? await User.findById(userId).select('platformDetails')
+      ? await User.findById(userId).select('username leetcodeUsername platformDetails')
       : null;
     const platformData = {};
     const platformStatus = {};
@@ -300,6 +301,9 @@ router.post('/combined', async (req, res) => {
         codechefUsername,
         platformDetails: combinedData
       });
+      if (typeof invalidateUserCache === 'function') {
+        invalidateUserCache(existingUser?.username, existingUser?.leetcodeUsername, leetcodeUsername);
+      }
     }
     return res.json({
       success: true,

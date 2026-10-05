@@ -1,0 +1,12 @@
+metric,value
+route,/recommend/:username
+optimization,5-minute TTL NodeCache + recommended array shim
+cold_miss_ms,4479.1
+warm_hits_ms,"[25.8, 29.92, 32.6, 28.95, 9.62]"
+warm_hit_median_ms,28.95
+warm_hit_min_ms,9.62
+warm_hit_max_ms,32.6
+speedup_ratio,155.0
+latency_reduction_pct,99.35
+output_items,50
+frontend_bug_fixed,Populated data.recommended array to prevent Recom_model.jsx crash

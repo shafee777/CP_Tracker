@@ -1,0 +1,23 @@
+{
+  "baseline_cold_spawn": {
+    "runs": 10,
+    "median_ms": 4068.46,
+    "p95_ms": 5247.04,
+    "min_ms": 3476.39,
+    "max_ms": 5370.72
+  },
+  "improved_warm_in_memory": {
+    "one_time_load_ms": 34.71,
+    "runs": 10,
+    "median_ms": 49.93,
+    "p95_ms": 61.04,
+    "min_ms": 30.94,
+    "max_ms": 64.0
+  },
+  "comparison": {
+    "absolute_diff_ms": 4018.53,
+    "relative_reduction_pct": 98.77,
+    "speedup_ratio": 81.5,
+    "output_parity_verified": true
+  }
+}

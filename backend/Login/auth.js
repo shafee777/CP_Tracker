@@ -101,6 +101,12 @@ const verifyToken = (req, res, next) => {
 router.put('/update-profile/:id', async (req, res) => {
   try {
     const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    try {
+      const { invalidateUserCache } = require('../routes/recommend');
+      if (typeof invalidateUserCache === 'function' && updatedUser) {
+        invalidateUserCache(updatedUser.username, updatedUser.leetcodeUsername);
+      }
+    } catch (_) {}
     res.json({ success: true, user: updatedUser });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

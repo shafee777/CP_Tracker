@@ -1,0 +1,13 @@
+trial,order,info_requirement,method_A_seconds,method_B_seconds,method_A_errors,method_B_errors,notes
+1,A-then-B,LeetCode total solved count,,,,,
+2,B-then-A,LeetCode Easy / Medium / Hard breakdown,,,,,
+3,A-then-B,LeetCode global ranking,,,,,
+4,B-then-A,LeetCode contest count,,,,,
+5,A-then-B,LeetCode current contest rating,,,,,
+6,B-then-A,Codeforces current rating,,,,,
+7,A-then-B,Codeforces max rating,,,,,
+8,B-then-A,Codeforces total problems solved,,,,,
+9,A-then-B,CodeChef current rating,,,,,
+10,B-then-A,CodeChef total problems solved,,,,,
+11,A-then-B,LeetCode solved last week (from heatmap),,,,,
+12,B-then-A,Codeforces last 5 contests: rating change trend,,,,,

@@ -1,0 +1,17 @@
+{
+  "run_at": "2026-10-05T18:04:43.388116",
+  "server": "http://localhost:3000",
+  "runs_per_profile": 5,
+  "warmup_runs": 1,
+  "rate_limit_sleep_s": 2.5,
+  "server_was_up": true,
+  "data_source": "LIVE external APIs (LeetCode GraphQL, Codeforces REST, CodeChef HTML scraper)",
+  "cache_note": "Express in-memory cache (plain object, no TTL) \u2014 runs after warmup may hit cache",
+  "limitations": [
+    "External API latency varies with third-party load and network.",
+    "LeetCode rate-limits GraphQL \u2014 consecutive runs risk 429.",
+    "CodeChef uses HTML scraping \u2014 fragile to markup changes.",
+    "Platform cache in Express is per-process; warmup run populates it.",
+    "Caching means run-2+ may be faster than uncached \u2014 labeled accordingly."
+  ]
+}
