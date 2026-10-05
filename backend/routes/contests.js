@@ -35,7 +35,7 @@ router.get('/upcoming', async (req, res) => {
 
     const upcoming = allContests.filter(contest =>
       !isNaN(parseInt(contest.startTime)) &&
-      parseInt(contest.startTime) > nowTimestamp
+      parseInt(contest.startTime) > nowTimestamp 
     );
 
     const formattedUpcoming = upcoming
@@ -65,7 +65,6 @@ router.get('/upcoming', async (req, res) => {
       if (aMonthKey !== nowKey && bMonthKey === nowKey) return 1;
       return b.startTimestamp - a.startTimestamp;
     });
-
 
     cache[cacheKey] = formattedUpcoming;
     res.json(formattedUpcoming);

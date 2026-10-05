@@ -1,0 +1,17 @@
+# Python requirements for recommender tools
+pymongo
+scikit-learn
+joblib
+numpy
+scipy
+
+# Quick usage:
+# 1. Create and activate a virtualenv (optional but recommended)
+#    python -m venv .venv
+#    .venv\Scripts\activate   (Windows)
+# 2. Install dependencies:
+#    pip install -r req.txt
+# 3. Run precompute script:
+#    python backend/scripts/precompute_vectors.py
+# 4. Test recommender:
+#    python backend/ml.py <LeetCodeUsername>

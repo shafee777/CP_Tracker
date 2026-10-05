@@ -19,7 +19,8 @@ const loginSchema = new mongoose.Schema({
     platformDetails: {
         leetcode: Object,
         codeforces: Object,
-        codechef: Object
+        codechef: Object,
+        platformStatus: Object
     },
     createdAt: { type: Date, default: Date.now }
 })

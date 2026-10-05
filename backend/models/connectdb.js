@@ -9,4 +9,5 @@ const connectToDB = async()=>{
         console.error('Error connecting to MongoDB with Mongoose:', error);
     }
 }
+
 module.exports = connectToDB

@@ -4,7 +4,7 @@ const cors = require('cors');
 const connectdb=require('./models/connectdb');
 const app = express();
 const PORT = 3000;
-const lcPredictionRoute = require('./routes/LC_prediction');
+
 
 // Middleware
 app.use(cors());
@@ -21,6 +21,7 @@ const contestRoutes = require('./routes/contests');
 const codechefRoutes = require('./routes/codechef');
 const codeforceRoutes = require('./routes/codeforce');
 const allplatformRoutes = require('./routes/allplatform');
+const lcPredictionRoute = require('./routes/LC_prediction');
 const userRoutes = require('./routes/user');
 const recommendRoute = require("./routes/recommend");
 

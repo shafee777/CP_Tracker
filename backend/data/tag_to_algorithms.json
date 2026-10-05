@@ -1,0 +1,12 @@
+{
+  "two-pointers": ["Two Pointers"],
+  "sliding-window": ["Two Pointers", "Kadane"],
+  "dynamic-programming": ["DP", "Memoization", "Bottom-up DP"],
+  "graphs": ["BFS", "DFS", "Dijkstra", "Union-Find"],
+  "trees": ["Tree Traversal", "DFS", "BFS", "Binary Search Tree"],
+  "binary-search": ["Binary Search"],
+  "math": ["Number Theory"],
+  "greedy": ["Greedy"],
+  "stack": ["Stack"],
+  "hash-table": ["Hashing"]
+}

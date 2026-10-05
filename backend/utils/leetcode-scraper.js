@@ -14,10 +14,9 @@ const graphqlQuery = async (query, variables) => {
                     'Origin': 'https://leetcode.com',
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
                 }
-
             }
         );
-
+        
         if (response.data.errors) {
             const errorMessage = response.data.errors[0].message || 'Unknown GraphQL error';
             console.error('GraphQL Error:', errorMessage);

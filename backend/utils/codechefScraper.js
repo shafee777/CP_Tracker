@@ -14,7 +14,6 @@ async function getUserData(username) {
     });
 
     const $ = cheerio.load(response.data);
-
     const rating = $('.rating-number').first().text().trim();
     const stars = $('.rating-star').first().text().trim();
     const fullyQualifiedName = $('.user-details-container header h1').text().trim() || username;

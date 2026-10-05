@@ -9,6 +9,103 @@ const { getUserInfo, getContestHistory} = require('../utils/codeforce-scraper');
 const { getUserData } = require('../utils/codechefScraper');
 const User=require("../models/login")
 
+const isRecord = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+
+const asNumber = (value, fieldName) => {
+  const number = Number(value);
+  if (!Number.isFinite(number) || number < 0) {
+    throw new Error(`Invalid ${fieldName} in platform response`);
+  }
+  return number;
+};
+
+const normalizePlatformData = (platform, data) => {
+  const platformNames = {
+    leetcode: 'LeetCode',
+    codeforces: 'Codeforces',
+    codechef: 'CodeChef'
+  };
+  if (!isRecord(data) || data.platform !== platformNames[platform]) {
+    throw new Error(`Invalid ${platform} response`);
+  }
+  if (typeof data.username !== 'string' || !data.username.trim()) {
+    throw new Error(`Missing ${platform} username in response`);
+  }
+
+  if (platform === 'leetcode') {
+    if (!Array.isArray(data.problemsSolved) || !isRecord(data.contests) || !isRecord(data.heatmap)) {
+      throw new Error('Invalid LeetCode profile structure');
+    }
+    return {
+      ...data,
+      username: data.username.trim(),
+      ranking: data.ranking == null ? null : asNumber(data.ranking, 'ranking'),
+      starRating: data.starRating == null ? null : asNumber(data.starRating, 'star rating'),
+      problemsSolved: data.problemsSolved.map(problem => {
+        if (!isRecord(problem) || typeof problem.difficulty !== 'string') {
+          throw new Error('Invalid LeetCode problem statistics');
+        }
+        return { ...problem, count: asNumber(problem.count, 'problem count') };
+      }),
+      recentSubmissions: Array.isArray(data.recentSubmissions) ? data.recentSubmissions : [],
+      contests: {
+        ...data.contests,
+        total: asNumber(data.contests.total, 'contest count'),
+        ratingHistory: Array.isArray(data.contests.ratingHistory) ? data.contests.ratingHistory : []
+      },
+      heatmap: {
+        ...data.heatmap,
+        data: Array.isArray(data.heatmap.data) ? data.heatmap.data : []
+      },
+      solvedProblems: isRecord(data.solvedProblems) ? data.solvedProblems : {}
+    };
+  }
+
+  if (platform === 'codeforces') {
+    if (!isRecord(data.contests)) throw new Error('Invalid Codeforces contest history');
+    return {
+      ...data,
+      username: data.username.trim(),
+      rating: data.rating == null ? 0 : asNumber(data.rating, 'rating'),
+      maxRating: data.maxRating == null ? 0 : asNumber(data.maxRating, 'maximum rating'),
+      totalSolved: asNumber(data.totalSolved, 'solved count'),
+      contests: {
+        ...data.contests,
+        totalContests: asNumber(data.contests.totalContests, 'contest count'),
+        contests: Array.isArray(data.contests.contests) ? data.contests.contests : []
+      }
+    };
+  }
+
+  if (!Array.isArray(data.ratingHistory)) throw new Error('Invalid CodeChef rating history');
+  return {
+    ...data,
+    username: data.username.trim(),
+    rating: asNumber(data.rating || 0, 'rating'),
+    totalSolved: asNumber(data.totalSolved || 0, 'solved count'),
+    totalContests: asNumber(data.totalContests || 0, 'contest count'),
+    ratingHistory: data.ratingHistory
+  };
+};
+
+const fetchPlatformWithRetry = async (platform, url, maxAttempts = 3) => {
+  let lastError;
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      const response = await axios.get(url, { timeout: 20000 });
+      return { data: normalizePlatformData(platform, response.data), attempts: attempt };
+    } catch (error) {
+      lastError = error;
+      if (attempt < maxAttempts) {
+        await new Promise(resolve => setTimeout(resolve, 500 * (2 ** (attempt - 1))));
+      }
+    }
+  }
+
+  throw Object.assign(new Error(lastError.message), { attempts: maxAttempts });
+};
+
 // LeetCode Queries
 const leetProfileQuery = `
   query getUserProfile($username: String!) {
@@ -30,7 +127,6 @@ const leetContestQuery = `
       attended rating ranking contest { title startTime }
     }
   }`;
-  
 
 const leetSubmissionQuery = `
   query recentSubmissions($username: String!) {
@@ -38,6 +134,7 @@ const leetSubmissionQuery = `
       title titleSlug statusDisplay lang
     }
   }`;
+
 const leetCalendarQuery = `
   query userCalendar($username: String!) {
     matchedUser(username: $username) {
@@ -51,10 +148,8 @@ const leetCalendarQuery = `
   }
 `;
 
-
 router.get('/:platform/:username', async (req, res) => {
   const { platform, username } = req.params;
-
   try {
     if (platform === 'leetcode') {
     const [profileRes, contestRes, submissionRes, solvedProblems, calendarRes] = await Promise.all([
@@ -63,7 +158,7 @@ router.get('/:platform/:username', async (req, res) => {
       graphqlQuery(leetSubmissionQuery, { username }),
       fetchAcceptedSubmissions(username),
       graphqlQuery(leetCalendarQuery, { username })
-    ]);
+    ])
 
     const user = profileRes.data?.matchedUser;
     const calendarRaw = calendarRes.data?.matchedUser?.userCalendar || {};
@@ -93,7 +188,8 @@ router.get('/:platform/:username', async (req, res) => {
       try {
         const { tags, difficulty } = await getProblemTags(sub.titleSlug);
         return { ...sub, tags, difficulty };
-      } catch {
+      }
+      catch {
         return { ...sub, tags: [], difficulty: 'Unknown' };
       }
     }));
@@ -130,7 +226,7 @@ router.get('/:platform/:username', async (req, res) => {
 
       return res.json({
         platform: 'Codeforces', 
-        username: userInfo.handle,
+        username: userInfo.username || userInfo.handle || username,
         rating: userInfo.rating,
         rank: userInfo.rank,
         maxRating: userInfo.maxRating,
@@ -162,16 +258,41 @@ router.post('/combined', async (req, res) => {
   const { leetcodeUsername, codeforcesUsername, codechefUsername,userId } = req.body;
 
   try {
-    const [leetcodeRes, codeforcesRes, codechefRes] = await Promise.all([
-      axios.get(`http://localhost:3000/all/leetcode/${leetcodeUsername}`),
-      axios.get(`http://localhost:3000/all/codeforces/${codeforcesUsername}`),
-      axios.get(`http://localhost:3000/all/codechef/${codechefUsername}`)
-    ]);
-    const combinedData = {
-      leetcode: leetcodeRes.data,
-      codeforces: codeforcesRes.data,
-      codechef: codechefRes.data
+    const platformRequests = {
+      leetcode: `http://localhost:3000/all/leetcode/${encodeURIComponent(leetcodeUsername || '')}`,
+      codeforces: `http://localhost:3000/all/codeforces/${encodeURIComponent(codeforcesUsername || '')}`,
+      codechef: `http://localhost:3000/all/codechef/${encodeURIComponent(codechefUsername || '')}`
     };
+    const settledRequests = await Promise.allSettled(
+      Object.entries(platformRequests).map(([platform, url]) => fetchPlatformWithRetry(platform, url))
+    );
+
+    const existingUser = userId
+      ? await User.findById(userId).select('platformDetails')
+      : null;
+    const platformData = {};
+    const platformStatus = {};
+    settledRequests.forEach((result, index) => {
+      const platform = Object.keys(platformRequests)[index];
+      if (result.status === 'fulfilled') {
+        platformData[platform] = result.value.data;
+        platformStatus[platform] = {
+          status: 'success',
+          attempts: result.value.attempts
+        };
+      } else {
+        const lastKnownData = existingUser?.platformDetails?.[platform];
+        platformData[platform] = lastKnownData || null;
+        platformStatus[platform] = {
+          status: lastKnownData ? 'stale' : 'failed',
+          attempts: result.reason.attempts || 3,
+          error: result.reason.message
+        };
+        console.error(`${platform} fetch failed after ${platformStatus[platform].attempts} attempts:`, result.reason.message);
+      }
+    });
+
+    const combinedData = { ...platformData, platformStatus };
     if (userId) {
       await User.findByIdAndUpdate(userId, {
         leetcodeUsername,
@@ -182,7 +303,8 @@ router.post('/combined', async (req, res) => {
     }
     return res.json({
       success: true,
-      ...combinedData
+      ...combinedData,
+      partial: Object.values(platformStatus).some(({ status }) => status !== 'success')
     });
   } catch (error) {
     console.error('Fetch platform error:', error.message);

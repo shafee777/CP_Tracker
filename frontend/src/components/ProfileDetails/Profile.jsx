@@ -38,6 +38,8 @@ export default function Profile() {
   const leet = userData.platformDetails?.leetcode || {};
   const cf = userData.platformDetails?.codeforces || {};
   const cc = userData.platformDetails?.codechef || {};
+  const incompletePlatforms = Object.entries(userData.platformDetails?.platformStatus || {})
+    .filter(([, status]) => status.status !== 'success');
   const leetMaxRating = leet.ratingHistory?.length? Math.max(...leet.ratingHistory.map(r => r.ratingAfter || 0)): 0;
   const leetcodeRatingData =
   (leet.contests?.ratingHistory || []).map(entry => ({
@@ -65,6 +67,17 @@ export default function Profile() {
   return (
     <div className="flex flex-col md:flex-row gap-6 p-4">
       <div className="flex-1 flex flex-col gap-4">
+        {incompletePlatforms.length > 0 && (
+          <div role="status" className="border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            <p className="font-semibold">Dashboard data is incomplete</p>
+            <p>
+              {incompletePlatforms.map(([platform]) => platform.charAt(0).toUpperCase() + platform.slice(1)).join(', ')} could not be refreshed.
+              {incompletePlatforms.some(([, status]) => status.status === 'stale')
+                ? ' Previously saved data is shown where available.'
+                : ' Data from the other platforms is still shown.'}
+            </p>
+          </div>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SolvedProblems
             solved={{

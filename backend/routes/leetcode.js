@@ -16,7 +16,7 @@ router.get('/:username', async (req, res) => {
   if (cache[key]) {
     return res.json(cache[key]);
   }
-
+  
   const query = `
     query getUserProfile($username: String!) {
       matchedUser(username: $username) {

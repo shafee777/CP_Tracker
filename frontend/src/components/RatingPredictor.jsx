@@ -38,7 +38,7 @@ const RatingPredictor = () => {
       fetchPrediction()
     }
   }
-
+``
   // Static text colors: overrides dynamic rating colors
   const staticRatingTextColor = "text-gray-800"
   const staticBadgeColor = "bg-gray-400"
