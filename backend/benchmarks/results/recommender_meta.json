@@ -16,7 +16,8 @@
       "Easy": 477,
       "Medium": 963,
       "Hard": 385
-    }
+    },
+    "vectorization": "CountVectorizer with L2 row normalization (NOT TF-IDF; no IDF weighting)"
   },
   "benchmark": {
     "warmup_runs": 3,
@@ -27,14 +28,23 @@
     "external_api": "none (all data from MongoDB + local files)"
   },
   "aggregate": {
-    "median_of_medians_ms": 6.55,
-    "p95_of_p95s_ms": 18.495
+    "total_raw_runs": 200,
+    "true_pooled_median_ms": 6.954,
+    "true_pooled_p95_ms": 15.952,
+    "true_pooled_min_ms": 4.506,
+    "true_pooled_max_ms": 22.397,
+    "vector_build_median_ms": 0.13,
+    "vector_build_p95_ms": 3.841,
+    "search_only_median_ms": 6.851,
+    "search_only_p95_ms": 12.261,
+    "calculation_method": "Pooled across all 200 raw individual runs (statistically correct, avoids quantile-of-quantiles error)"
   },
   "limitations": [
-    "All popularity scores are 0 \u2014 popularity dimension of scoring is inactive.",
-    "Codeforces / CodeChef profiles not used by recommender (LC-only).",
-    "solved_slugs mismatch: some users have API-reported solved count >> slug DB count.",
-    "No human-labeled relevance judgments \u2014 Precision@10 cannot be computed.",
-    "Circularity: weak tags are both ranking inputs AND evaluation targets."
+    "Vectorization uses CountVectorizer + L2 normalization, NOT TF-IDF (no IDF component).",
+    "All popularity scores in problems_meta.json are 0; popularity scoring dimension is inactive.",
+    "Solved-problem exclusion is verified only against stored problem slugs in MongoDB, not unrecorded live history.",
+    "fetchAcceptedSubmissions.js fails with HTTP 401 due to expired session cookie, leading to 0 stored slugs on refreshed profiles.",
+    "Weak-topic coverage (100%) measures retrieval filter alignment, not pedagogical accuracy or learning gains.",
+    "Precision@10 remains unmeasured pending independent human relevance judgments."
   ]
 }
